@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--Based on Epogue MatchmakerWebLite part 2
+Credits given
+-->
+
+<head>
+	<meta charset='UTF-8'>
+	<title>Healthcare Calculator</title>
+	<link rel='stylesheet' href='index.css' />
+</head>
+
+<body>
+    <br /><br />
+    <br /><br />
+    <br /><br />
+	<h1>Health Insurance Risk</h1>
+    <!--img class='img-hospital' src="index.jpg" alt="hospital"-->
+    <div class="img-hospital">
+	<br /><br />
+	<p id='p1'>Choose values and options that reflect your current medical state and history.</p> 
+    <br /><br />
+    <label>What is your age?</label><br />
+	<select id='Age'>
+		<option value='0'>0 - 29</option>
+		<option value='10'>30 - 44</option>
+		<option value='20'>45 - 60 </option>
+		<option value='30'>60+</option>
+	</select>
+	<br /><br />
+
+    Enter height in inches: <input type="text" id="Height" /><br>
+    <br /><br />
+    Enter weight in lbs: <input type="text" id="Weight" /><br>
+    <br /><br />
+
+    <label>What range does your blood pressure in mm Hg fall into?<br 
+    /> *Systolic is the first number <br 
+    /> *Diastolic is the second number</label><br />
+	<select id='blood_press'>
+		<option value='0'>Less than 120, and less than 80</option>
+		<option value='15'>120 - 129, and less than 80</option>
+		<option value='30'>130 - 139, or 80-89</option>
+		<option value='75'>Higher than 140, or Higher than 90</option>
+        <option value='100'>Higher than 180 and/or Higher than 120</option>
+	</select>
+	<br /><br />
+
+    <label>Do you have a family history of diabetes?</label><br />
+	<select id='diabetes'>
+		<option value='0'>No</option>
+		<option value='10'>Yes</option>
+	</select>
+	<br /><br />
+
+    <label>Do you have a family history of cancer?</label><br />
+	<select id='cancer'>
+		<option value='0'>No</option>
+		<option value='10'>Yes</option>
+	</select>
+	<br /><br />
+
+    <label>Do you have a family history of Alzheimer's?</label><br />
+	<select id='alzheimer'>
+		<option value='0'>No</option>
+		<option value='10'>Yes</option>
+	</select>
+	<br /><br />
+
+    <button onclick='calcRisk()'>Calculate Risk</button>
+	<br /><br /><br />
+    <p id='BMI'></p>
+    <br /><br />
+	<p id='Risk'></p>
+</div>
+    
+
+<!-- <p>JavaScript</p> -->
+<script>
+    console.log('Starting Healthcare Calculator');
+
+function calcRisk() {
+    console.log('calcRisk()');
+
+// get current values from dropdown and input (except height and weight) //
+
+    let age_resp = document.getElementById('Age').selectedOptions[0].value;
+
+    let blp_resp = document.getElementById('blood_press').selectedOptions[0].value;
+
+    let ht_resp = document.getElementById("Height").value;
+
+    let wt_resp = document.getElementById('Weight').value;
+
+    let dia_resp = document.getElementById('diabetes').selectedOptions[0].value;
+
+    let canc_resp = document.getElementById('cancer').selectedOptions[0].value;
+    
+    let alz_resp = document.getElementById('alzheimer').selectedOptions[0].value;
+
+// log the values associated with the questions //
+
+console.log("Age Answers:")
+	console.log(document.getElementById('Age').selectedOptions[0].text);
+	console.log(document.getElementById('Age').selectedOptions[0].value);
+	console.log(age_resp);
+
+console.log("BP Answers:")
+	console.log(document.getElementById('blood_press').selectedOptions[0].text);
+	console.log(document.getElementById('blood_press').selectedOptions[0].value);
+	console.log(blp_resp);
+
+        // inputs for weight and height are logged differently //
+console.log("Height Answers:")
+    console.log(document.getElementById('Height').value);
+	console.log(ht_resp);
+
+console.log("Weight Answers:")
+    console.log(document.getElementById('Weight').value);
+	console.log(wt_resp);
+
+
+console.log("Diabetes Answer:")
+	console.log(document.getElementById('diabetes').selectedOptions[0].text);
+	console.log(document.getElementById('diabetes').selectedOptions[0].value);
+	console.log(dia_resp);
+
+console.log("Cancer Answer:")
+	console.log(document.getElementById('cancer').selectedOptions[0].text);
+	console.log(document.getElementById('cancer').selectedOptions[0].value);
+	console.log(canc_resp);
+
+console.log("Alzheimer Answer:")
+	console.log(document.getElementById('alzheimer').selectedOptions[0].text);
+	console.log(document.getElementById('alzheimer').selectedOptions[0].value);
+	console.log(alz_resp);
+    
+// Metric BMI Formula = weight(kg)/(height(m))^2
+
+    let ht_meters = ht_resp * 0.0254;   // from google conversions
+    let wt_kgs = wt_resp * 0.4536;     // from google conversions
+
+    console.log('MetricCalc');
+    console.log(ht_meters + ' m');
+    console.log(wt_kgs + ' kg');
+
+    // Math.pow(a,b) a=number b=exponent
+    let bmi_calc = (wt_kgs / Math.pow(ht_meters, 2));
+    console.log(bmi_calc + ' kg/m');
+
+	let bmi_rounded = bmi_calc.toFixed(2);
+
+    // BMI Weighted Score
+    if (bmi_calc >= 18.5 && bmi_calc <= 24.9) {
+			bmi_score = 0;
+		}
+		else if (bmi_calc >= 25.0 && bmi_calc < 29.0) {
+			bmi_score = 30;
+		}
+		else if (bmi_calc > 30) {
+			bmi_score = 75; 
+		}
+    console.log(bmi_score);
+
+    // Total Risk 
+    let total_risk = Number(age_resp) + Number(blp_resp) + Number(bmi_score) + Number(dia_resp) + Number(canc_resp) + Number(alz_resp); 
+    console.log(total_risk);
+
+    // Complete Risk Assessment 
+
+    if (total_risk <= 20) {
+			greeting = 'Your are a low risk candidate.';
+		}
+		else if (total_risk > 20 && total_risk <= 50) {
+			greeting = 'You are a moderate risk candidate.';
+		}
+		else if (total_risk > 50 && total_risk <= 75) {
+			greeting = 'You are a high risk candidate.'; 
+        }
+        else {
+            greeting = 'Sorry you are uninsurable.';
+        }
+        
+        document.getElementById('BMI').innerHTML = 'Your BMI is: ' + bmi_rounded + ' kg/m^2';
+        document.getElementById('Risk').innerHTML = 'Risk Assesment: ' + greeting;
+
+
+}
+
+</script> 
